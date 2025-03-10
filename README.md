@@ -11,4 +11,7 @@
 
 ## Links
 
-- [Discord server][https://discord.gg/mkCxuSfXjq]
+- [Discord server](https://discord.gg/mkCxuSfXjq)
+
+## Notes
+このリポジトリは古くなっています
