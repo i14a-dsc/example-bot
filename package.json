@@ -1,0 +1,37 @@
+{
+  "name": "example-bot",
+  "module": "src/index.ts",
+  "type": "module",
+  "engineStrict": true,
+  "devDependencies": {
+    "@eslint/compat": "^1.3.1",
+    "@types/bun": "^1.2.18",
+    "@types/node": "^20.19.4",
+    "@typescript-eslint/parser": "^8.35.1",
+    "@typescript/native-preview": "^7.0.0-dev.20250708.1",
+    "eslint-plugin-unused-imports": "^4.1.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "discord.js": "^14.21.0",
+    "dotenv": "^16.6.1",
+    "eslint": "^9.30.1",
+    "husky": "^9.1.7",
+    "typedoc": "^0.28.7"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "build": "echo Build is unsupported for this project. Because it uses dynamic imports.",
+    "rmcache": "rm -rf node_modules/.cache && echo Cache removed.",
+    "lint": "echo Running eslint... && eslint . && echo Running tsc... && tsc --noEmit && echo Linting completed.",
+    "lint:fix": "echo Running eslint --fix... && eslint . --fix &&  echo Linting completed.",
+    "typedoc": "typedoc",
+    "watch": "bun run --hot src/index.ts",
+    "test": "echo No tests defined.",
+    "fmt": "echo Running prettier... && prettier --write . && echo Formatting completed."
+  }
+}
