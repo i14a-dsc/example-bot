@@ -9,7 +9,7 @@ export async function buttonHandler(interaction: ButtonInteraction) {
     let action: string | undefined;
 
     if (customId.startsWith('example_')) {
-      action = 'example_relarive';
+      action = 'example_relative';
     }
 
     if (action) {
