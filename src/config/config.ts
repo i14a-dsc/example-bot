@@ -41,10 +41,10 @@ const development: boolean = _development || !production;
  * Developer, admin, VIP, and blacklist user lists from environment variables.
  * @type {string[]}
  */
-const dev = process.env['developer'] ? process.env['developer'].split(',') ?? [] : [];
-const admin = process.env['admin'] ? process.env['admin'].split(',') ?? [] : [];
-const vip = process.env['vip'] ? process.env['vip'].split(',') ?? [] : [];
-const blacklist = process.env['blacklist'] ? process.env['blacklist'].split(',') ?? [] : [];
+const dev = process.env['developer'] ? (process.env['developer'].split(',') ?? []) : [];
+const admin = process.env['admin'] ? (process.env['admin'].split(',') ?? []) : [];
+const vip = process.env['vip'] ? (process.env['vip'].split(',') ?? []) : [];
+const blacklist = process.env['blacklist'] ? (process.env['blacklist'].split(',') ?? []) : [];
 
 /**
  * Main bot configuration object.
