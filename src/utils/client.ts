@@ -162,10 +162,10 @@ export class Client extends DiscordClient {
       }
     }
 
-    FancyLogger.loading('Uploading slash commands to Discord');
+    FancyLogger.loading('Uploading slash commands...', '📤 Commands');
     this._uploadCommands();
 
-    FancyLogger.loading('Logging in to Discord');
+    FancyLogger.loading('Logging in to Discord', '🔑 Client');
     await this.login(this.config.token);
     return this;
   }
@@ -185,7 +185,7 @@ export class Client extends DiscordClient {
    * @param exitCode The exit code to use (default 0)
    */
   public async stop(exitCode: number = 0) {
-    await FancyLogger.gradient('Stopping...');
+    await FancyLogger.loading('Shutting down...', '❎ Stopping');
     await this.destroy();
     process.exit(exitCode);
   }

@@ -6,9 +6,7 @@
 import { Client } from './utils/client.ts';
 import { FancyLogger } from './utils/logger.ts';
 
-// Display startup banners
-FancyLogger.rainbow('Starting up...');
-FancyLogger.gradient('Powered by Discord.js');
+FancyLogger.rainbow('Starting up...\n\nPowered by Discord.js V14', 'title: 💻 Discord Bot');
 
 if (!process.argv.some(arg => arg.replace(/\\/g, '/').endsWith('src/index.ts'))) {
   FancyLogger.error(
@@ -28,7 +26,6 @@ await client.init();
 
 export { client };
 
-// Handle graceful shutdown
 process.on('SIGINT', async () => {
   await client.stop();
   return false;
