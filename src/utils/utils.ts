@@ -1,6 +1,7 @@
 /**
  * Get the bot configuration object.
  */
+import { MessageFlags } from 'discord.js';
 import { getConfig } from '../config/config';
 
 const config = getConfig();
@@ -28,4 +29,8 @@ export function checkPermission(
     return true;
   }
   return false;
+}
+
+export function isEphemeral(ephemeral: boolean | null | undefined = false): number {
+  return ephemeral ? MessageFlags.Ephemeral : 0;
 }
