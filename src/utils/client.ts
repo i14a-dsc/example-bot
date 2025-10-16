@@ -20,6 +20,7 @@ import { FancyLogger } from './logger';
 import { ready } from '../events/handlers/ready';
 import { interactionCreate } from '../events/handlers/interactionCreate';
 import { messageCreate } from '../events/handlers/messageCreate';
+import { deleteLockfile } from './utils';
 
 /**
  * The main Discord bot client, extending discord.js Client with additional properties and methods for commands, buttons, select menus, modals, and more.
@@ -184,9 +185,10 @@ export class Client extends DiscordClient {
    * Stop the bot and exit the process.
    * @param exitCode The exit code to use (default 0)
    */
-  public async stop(exitCode: number = 0) {
+  public async stop(exitCode: number = 0): Promise<never> {
     await FancyLogger.loading('Shutting down...', '❎ Stopping');
     await this.destroy();
+    deleteLockfile();
     process.exit(exitCode);
   }
 

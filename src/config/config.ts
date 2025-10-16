@@ -15,11 +15,6 @@ const versions: Versions = {
   patch: 0,
   version: 'dev',
 };
-/**
- * The full version string (e.g., '1.0.0-dev').
- * @type {string}
- */
-const version = `${versions.major}.${versions.minor}.${versions.patch}-${versions.version}`;
 
 /**
  * Indicates if the bot is running in development mode.
@@ -38,13 +33,17 @@ const production: boolean = getArgs().includes('--production') || !_development;
 const development: boolean = _development || !production;
 
 /**
- * Developer, admin, VIP, and blacklist user lists from environment variables.
+ * Developer, admin, and blacklist user lists from environment variables.
  * @type {string[]}
  */
 const dev = process.env['developer'] ? process.env['developer'].split(',') ?? [] : [];
 const admin = process.env['admin'] ? process.env['admin'].split(',') ?? [] : [];
-const vip = process.env['vip'] ? process.env['vip'].split(',') ?? [] : [];
 const blacklist = process.env['blacklist'] ? process.env['blacklist'].split(',') ?? [] : [];
+/**
+ * The full version string (e.g., '1.0.0-dev').
+ * @type {string}
+ */
+const version = `${versions.major}.${versions.minor}.${versions.patch}-${versions.version}`;
 
 /**
  * Main bot configuration object.
@@ -60,7 +59,7 @@ const blacklist = process.env['blacklist'] ? process.env['blacklist'].split(',')
  * @property {string} clientId - Discord application client ID
  */
 const config = {
-  name: 'change here',
+  name: 'change-here',
   prefix: development ? 'y.' : 'y!',
   version,
   versions,
@@ -69,7 +68,6 @@ const config = {
   permissions: {
     dev,
     admin: [...admin, ...dev],
-    vip,
     blacklist,
   } as Permissions,
   token: development ? process.env['DEV_TOKEN'] ?? process.env['TOKEN'] : process.env['TOKEN'],

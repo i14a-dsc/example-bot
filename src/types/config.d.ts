@@ -8,6 +8,5 @@ export interface Versions {
 export interface Permissions {
   dev: string[];
   admin: string[];
-  vip: string[];
   blacklist: string[];
 }

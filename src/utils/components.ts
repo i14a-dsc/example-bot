@@ -76,7 +76,12 @@ export function errorComponent(content: string): APIMessageComponent[] {
         textDisplay(content),
         separator(),
         textDisplay(getConfig().toString()),
-        textDisplay('-# If you want to delete this message, click blue text below this block.'),
+        {
+          type: ComponentType.ActionRow,
+          components: [button('Close', 'delete-message', 4)],
+        },
+
+        textDisplay("-# If you can't delete this message with red button, please click blue text below red button."),
       ],
     },
   ];

@@ -3,10 +3,12 @@
  * Initializes the client and handles process events.
  * @module index
  */
-import { Client } from './utils/client.ts';
-import { FancyLogger } from './utils/logger.ts';
+import { Client } from './utils/client';
+import { getConfig } from './config/config';
+import { FancyLogger } from './utils/logger';
+import { checkLockfile, createLockfile } from './utils/utils';
 
-FancyLogger.rainbow('Starting up...\n\nPowered by Discord.js V14', 'title: 💻 Discord Bot');
+FancyLogger.rainbow(['Starting up...\n', 'Powered by Discord.js V14'], `title:${getConfig().name}`);
 
 if (!process.argv.some(arg => arg.replace(/\\/g, '/').endsWith('src/index.ts'))) {
   FancyLogger.error(
@@ -17,9 +19,13 @@ if (!process.argv.some(arg => arg.replace(/\\/g, '/').endsWith('src/index.ts')))
   process.exit(1);
 }
 
-/**
- * The main bot client instance.
- */
+if (await checkLockfile()) {
+  FancyLogger.error('Lockfile found. Please clean up previous instance or delete the lockfile.');
+  process.exit(1);
+} else {
+  createLockfile();
+}
+
 const client = new Client();
 
 await client.init();
