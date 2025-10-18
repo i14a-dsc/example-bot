@@ -55,9 +55,7 @@ export class Placeholder {
   ) {
     if (Array.isArray(value)) {
       this.result = value.join('\n');
-    } else {
-      this.result = value;
-    }
+    } else this.result = value;
   }
 
   replace(args?: string[]) {
@@ -75,9 +73,7 @@ export class Placeholder {
     this._replace('%nl', '\n');
     this._replace('%prefix', getConfig().prefix);
     this._replace('%dev', getConfig().permissions.dev.join(', '));
-    if (this.noColor) {
-      return this.result;
-    }
+    if (this.noColor) return this.result;
 
     this._replace('%red', colors.red);
     this._replace('%green', colors.green);

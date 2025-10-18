@@ -6,23 +6,13 @@ import { modalHandler } from './interactions/modal';
 import { autoCompleteHandler } from './interactions/autocomplete';
 
 export async function interactionCreate(interaction: Interaction) {
-  if (interaction.isAutocomplete()) {
-    autoCompleteHandler(interaction);
-  }
+  if (interaction.isAutocomplete()) autoCompleteHandler(interaction);
 
-  if (interaction.isButton()) {
-    buttonHandler(interaction);
-  }
+  if (interaction.isButton()) buttonHandler(interaction);
 
-  if (interaction.isChatInputCommand()) {
-    commandHandler(interaction);
-  }
+  if (interaction.isChatInputCommand()) commandHandler(interaction);
 
-  if (interaction.isModalSubmit()) {
-    modalHandler(interaction);
-  }
+  if (interaction.isModalSubmit()) modalHandler(interaction);
 
-  if (interaction.isStringSelectMenu()) {
-    selectMenuHandler(interaction);
-  }
+  if (interaction.isStringSelectMenu()) selectMenuHandler(interaction);
 }

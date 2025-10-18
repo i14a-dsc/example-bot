@@ -24,7 +24,6 @@ export default [
     rules: {
       semi: 'error',
       'no-eval': 'error',
-      curly: ['error', 'all'],
       'no-duplicate-imports': 'error',
       'no-empty-function': 'error',
       'no-inline-comments': 'error',
