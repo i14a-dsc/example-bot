@@ -22,37 +22,19 @@ import { interactionCreate } from '../events/handlers/interactionCreate';
 import { messageCreate } from '../events/handlers/messageCreate';
 import { deleteLockfile } from './utils';
 
-/**
- * The main Discord bot client, extending discord.js Client with additional properties and methods for commands, buttons, select menus, modals, and more.
- * Handles dynamic loading of handlers and provides utility methods for guild, user, and channel access.
- */
 export class Client extends DiscordClient {
-  /** The bot user. */
   declare user: ClientUser;
-  /** The bot application. */
   declare application: ClientApplication;
-  /** Collection of slash commands. */
   declare commands: Collection<string, Command>;
-  /** Collection of button handlers. */
   declare buttons: Collection<string, (interaction: ButtonInteraction) => void | Promise<void>>;
-  /** Collection of select menu handlers. */
   declare selectMenus: Collection<string, (interaction: AnySelectMenuInteraction) => void | Promise<void>>;
-  /** Collection of modal handlers. */
   declare modals: Collection<string, (interaction: ModalSubmitInteraction) => void | Promise<void>>;
-  /** Collection of autocomplete handlers. */
   declare completes: Collection<string, (interaction: AutocompleteInteraction) => void | Promise<void>>;
-  /** Collection of message command handlers. */
   declare messageCommands: Collection<string, (message: Message, args: string[]) => void | Promise<void>>;
 
-  /** Bot configuration object. */
   public config = getConfig();
-  /** REST client for Discord API. */
   public rest: REST = new REST({ version: '10' }).setToken(this.config.token ?? '');
 
-  /**
-   * Create a new bot client.
-   * @param options Client options (excluding intents, which are set by default)
-   */
   constructor(options?: Omit<ClientOptions, 'intents'>) {
     if (typeof Bun !== 'object') {
       FancyLogger.error([
@@ -68,9 +50,6 @@ export class Client extends DiscordClient {
     this.on('error', console.error);
   }
 
-  /**
-   * Initialize the bot, load all handlers, and log in to Discord.
-   */
   async init() {
     FancyLogger.loading('Initializing Discord bot');
 
