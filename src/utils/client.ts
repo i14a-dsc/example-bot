@@ -34,19 +34,14 @@ export class Client extends DiscordClient {
   /** Collection of slash commands. */
   declare commands: Collection<string, Command>;
   /** Collection of button handlers. */
-  /* eslint-disable-next-line no-unused-vars */
   declare buttons: Collection<string, (interaction: ButtonInteraction) => void | Promise<void>>;
   /** Collection of select menu handlers. */
-  /* eslint-disable-next-line no-unused-vars */
   declare selectMenus: Collection<string, (interaction: AnySelectMenuInteraction) => void | Promise<void>>;
   /** Collection of modal handlers. */
-  /* eslint-disable-next-line no-unused-vars */
   declare modals: Collection<string, (interaction: ModalSubmitInteraction) => void | Promise<void>>;
   /** Collection of autocomplete handlers. */
-  /* eslint-disable-next-line no-unused-vars */
   declare completes: Collection<string, (interaction: AutocompleteInteraction) => void | Promise<void>>;
   /** Collection of message command handlers. */
-  /* eslint-disable-next-line no-unused-vars */
   declare messageCommands: Collection<string, (message: Message, args: string[]) => void | Promise<void>>;
 
   /** Bot configuration object. */
