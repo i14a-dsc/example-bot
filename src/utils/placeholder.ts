@@ -46,7 +46,7 @@ export const colors = {
 };
 
 export class Placeholder {
-  declare public result: string;
+  public declare result: string;
 
   constructor(
     public value: string | string[] = '',
