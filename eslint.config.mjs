@@ -35,7 +35,12 @@ export default [
       'no-invalid-this': 'error',
       'no-debugger': 'error',
       'no-tabs': 'error',
-      'no-unused-vars': 'warn',
+      'no-unused-vars': [
+        'warn',
+        {
+          ignoreUsingDeclarations: false,
+        },
+      ],
       'no-unused-expressions': 'error',
       'no-unreachable-loop': 'error',
       'no-unreachable': 'warn',
