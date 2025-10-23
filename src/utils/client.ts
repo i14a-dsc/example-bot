@@ -21,15 +21,22 @@ import { ready } from '../events/handlers/ready';
 import { interactionCreate } from '../events/handlers/interactionCreate';
 import { messageCreate } from '../events/handlers/messageCreate';
 import { deleteLockfile } from './utils';
+import { mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
 
 export class Client extends DiscordClient {
   declare user: ClientUser;
   declare application: ClientApplication;
   declare commands: Collection<string, Command>;
+  /* eslint-disable no-unused-vars */
   declare buttons: Collection<string, (interaction: ButtonInteraction) => void | Promise<void>>;
+  /* eslint-disable no-unused-vars */
   declare selectMenus: Collection<string, (interaction: AnySelectMenuInteraction) => void | Promise<void>>;
+  /* eslint-disable no-unused-vars */
   declare modals: Collection<string, (interaction: ModalSubmitInteraction) => void | Promise<void>>;
+  /* eslint-disable no-unused-vars */
   declare completes: Collection<string, (interaction: AutocompleteInteraction) => void | Promise<void>>;
+  /* eslint-disable no-unused-vars */
   declare messageCommands: Collection<string, (message: Message, args: string[]) => void | Promise<void>>;
 
   public config = getConfig();
@@ -53,6 +60,8 @@ export class Client extends DiscordClient {
   async init() {
     FancyLogger.loading('Initializing Discord bot');
 
+    this.createDirectoryStructure();
+
     this.on('messageCreate', messageCreate);
     this.on('interactionCreate', interactionCreate);
     this.on('ready', ready);
@@ -60,99 +69,127 @@ export class Client extends DiscordClient {
 
     FancyLogger.loading('Loading handlers');
     const commandFiles = await fg('src/events/commands/**/*.ts');
-    for (const file of commandFiles) {
-      try {
-        const relativePath = file.replace('src/events/commands/', '../events/commands/');
-        const command = (await import(relativePath)).command as Command;
-        this.commands.set(command.data.name, command);
-      } catch (e: any) {
-        FancyLogger.error(`Error loading commands with glob: ${file}, ${e.message}`);
-        continue;
-      }
-    }
+    await Promise.allSettled(
+      commandFiles.map(async file => {
+        try {
+          const relativePath = file.replace('src/events/commands/', '../events/commands/');
+          const command = (await import(relativePath)).command as Command;
+          this.commands.set(command.data.name, command);
+        } catch (e: any) {
+          FancyLogger.error(`Error loading commands: ${file}, ${e.message}`);
+        }
+      }),
+    );
 
     this.buttons = new Collection();
     const buttonFiles = await fg('src/events/buttons/**/*.ts');
-    for (const file of buttonFiles) {
-      try {
-        const relativePath = file.replace('src/events/buttons/', '../events/buttons/');
-        const button = await import(relativePath);
-        const fileName = file.replace('src/events/buttons/', '').replace('.ts', '');
-        this.buttons.set(fileName, button.run);
-      } catch (e: any) {
-        FancyLogger.error(`Error loading button: ${file}, ${e.message}`);
-        continue;
-      }
-    }
+    await Promise.allSettled(
+      buttonFiles.map(async file => {
+        try {
+          const relativePath = file.replace('src/events/buttons/', '../events/buttons/');
+          const button = await import(relativePath);
+          const fileName = file.replace('src/events/buttons/', '').replace('.ts', '');
+          this.buttons.set(fileName, button.run);
+        } catch (e: any) {
+          FancyLogger.error(`Error loading button: ${file}, ${e.message}`);
+        }
+      }),
+    );
 
     this.selectMenus = new Collection();
     const selectMenuFiles = await fg('src/events/selectMenus/**/*.ts');
-    for (const file of selectMenuFiles) {
-      try {
-        const fileName = file.split('/').pop()!;
-        const selectMenu = await import(`../events/selectMenus/${fileName}`);
-        this.selectMenus.set(fileName.replace('.ts', ''), selectMenu.run);
-      } catch (e: any) {
-        FancyLogger.error(`Error loading select menu: ${file}, ${e.message}`);
-        continue;
-      }
-    }
+    await Promise.allSettled(
+      selectMenuFiles.map(async file => {
+        try {
+          const fileName = file.split('/').pop()!;
+          const selectMenu = await import(`../events/selectMenus/${fileName}`);
+          this.selectMenus.set(fileName.replace('.ts', ''), selectMenu.run);
+        } catch (e: any) {
+          FancyLogger.error(`Error loading select menu: ${file}, ${e.message}`);
+        }
+      }),
+    );
 
     this.modals = new Collection();
     const modalFiles = await fg('src/events/modals/**/*.ts');
-    for (const file of modalFiles) {
-      try {
-        const fileName = file.split('/').pop()!;
-        const modal = await import(`../events/modals/${fileName}`);
-        this.modals.set(fileName.replace('.ts', ''), modal.run);
-      } catch (e: any) {
-        FancyLogger.error(`Error loading modal: ${file}, ${e.message}`);
-        continue;
-      }
-    }
+    await Promise.allSettled(
+      modalFiles.map(async file => {
+        try {
+          const fileName = file.split('/').pop()!;
+          const modal = await import(`../events/modals/${fileName}`);
+          this.modals.set(fileName.replace('.ts', ''), modal.run);
+        } catch (e: any) {
+          FancyLogger.error(`Error loading modal: ${file}, ${e.message}`);
+        }
+      }),
+    );
 
     this.completes = new Collection();
     const completeFiles = await fg('src/events/completes/**/*.ts');
-    for (const file of completeFiles) {
-      try {
-        const fileName = file.split('/').pop()!;
-        const complete = await import(`../events/completes/${fileName}`);
-        this.completes.set(fileName.replace('.ts', ''), complete.run);
-      } catch (e: any) {
-        FancyLogger.error(`Error loading complete: ${file}, ${e.message}`);
-        continue;
-      }
-    }
+    await Promise.allSettled(
+      completeFiles.map(async file => {
+        try {
+          const fileName = file.split('/').pop()!;
+          const complete = await import(`../events/completes/${fileName}`);
+          this.completes.set(fileName.replace('.ts', ''), complete.run);
+        } catch (e: any) {
+          FancyLogger.error(`Error loading complete: ${file}, ${e.message}`);
+        }
+      }),
+    );
 
     this.messageCommands = new Collection();
     const messageCommandFiles = await fg('src/events/messages/**/*.ts');
-    for (const file of messageCommandFiles) {
-      try {
-        const fileName = file.split('/').pop()!;
-        const messageCommand = await import(`../events/messages/${fileName}`);
-        this.messageCommands.set(fileName.replace('.ts', ''), messageCommand.run);
-      } catch (e: any) {
-        FancyLogger.error(`Error loading message command: ${file}, ${e.message}`);
-        continue;
-      }
-    }
+    await Promise.allSettled(
+      messageCommandFiles.map(async file => {
+        try {
+          const fileName = file.split('/').pop()!;
+          const messageCommand = await import(`../events/messages/${fileName}`);
+          this.messageCommands.set(fileName.replace('.ts', ''), messageCommand.run);
+        } catch (e: any) {
+          FancyLogger.error(`Error loading message command: ${file}, ${e.message}`);
+        }
+      }),
+    );
 
-    FancyLogger.loading('Uploading slash commands...', '📤 Commands');
-    this._uploadCommands();
+    if (this.commands.size > 0) {
+      FancyLogger.loading(`Uploading ${this.commands.size} slash commands...`, '📤 Commands');
+      this._uploadCommands();
+    }
 
     FancyLogger.loading('Logging in to Discord', '🔑 Client');
     await this.login(this.config.token);
     return this;
   }
 
-  /**
-   * Upload slash commands to Discord.
-   * @private
-   */
   private async _uploadCommands() {
     await this.rest.put(Routes.applicationCommands(this.config.clientId ?? ''), {
       body: this.commands.map(command => command.data),
     });
+  }
+
+  private async createDirectoryStructure() {
+    const dirs = ['logs', 'data', 'data/guild_settings', 'config'];
+
+    const tasks = dirs.map(async dir => {
+      try {
+        if (existsSync(dir)) {
+          return { dir, created: false };
+        }
+
+        await mkdir(dir, { recursive: true });
+        return { dir, created: true };
+      } catch (e) {
+        throw new Error(`Error creating directory ${dir}: ${(e as Error).message}`);
+      }
+    });
+
+    const results = await Promise.allSettled(tasks);
+    for (const res of results) {
+      if (res.status === 'rejected') {
+        FancyLogger.error(res.reason?.message ?? String(res.reason));
+      }
+    }
   }
 
   /**
