@@ -1,4 +1,4 @@
-import { client } from '../';
+import { client } from '..';
 import { getGuildSettings } from './guildSettings';
 import type { Guild, EmbedBuilder } from 'discord.js';
 import boxen from 'boxen';
