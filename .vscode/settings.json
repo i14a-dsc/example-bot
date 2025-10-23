@@ -17,5 +17,6 @@
   "vscord.status.image.large.notInFile.text": "Not in a file",
   "vscord.status.image.large.viewing.text": "{file_name}{file_extension} ({LANG})",
   "vscord.status.details.idle.enabled": false,
-  "vscord.status.state.text.notInFile": "AFK"
+  "vscord.status.state.text.notInFile": "AFK",
+  "typescript.experimental.useTsgo": true
 }
