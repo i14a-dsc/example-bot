@@ -64,7 +64,7 @@ export class Client extends DiscordClient {
 
     this.on('messageCreate', messageCreate);
     this.on('interactionCreate', interactionCreate);
-    this.on('ready', ready);
+    this.on('clientReady', ready);
     this.commands = new Collection<string, Command>();
 
     FancyLogger.loading('Loading handlers');
