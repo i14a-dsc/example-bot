@@ -1,4 +1,25 @@
-## Commit rule
+# Contribute guide
+
+## Writing Style
+
+Use Double Space for indent
+
+## Message Components
+
+You should use common components from `src/utils/components.ts`.
+
+If you want to report an error to the user, use `errorComponent(content: string)`.
+
+Should be like:
+
+```ts
+await interaction.reply(
+  flags: [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2],
+  components: errorComponent('An error has occurred in executing your request'),
+)
+```
+
+## Commit message rule
 
 **1. Write Specifics**
 
