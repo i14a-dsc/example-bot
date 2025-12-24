@@ -1,6 +1,7 @@
-import type { ButtonInteraction } from 'discord.js';
+import { MessageFlags, type ButtonInteraction } from 'discord.js';
 import { client } from '../../..';
 import { mappings } from './buttonMappings';
+import { errorComponent } from '../../../utils/components';
 
 export async function buttonHandler(interaction: ButtonInteraction) {
   let button = client.buttons.get(interaction.customId);
@@ -33,8 +34,8 @@ export async function buttonHandler(interaction: ButtonInteraction) {
     if (!interaction.replied) {
       await interaction
         .reply({
-          content: 'There was an error while executing ' + customId + '!',
-          flags: 64,
+          flags: [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2],
+          components: errorComponent('An error has occurred in executing your request'),
         })
         .catch();
     }
