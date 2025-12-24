@@ -1,9 +1,8 @@
 {
   "recommendations": [
-    "parthr2031.colorful-comments",
     "editorconfig.editorconfig",
     "dbaeumer.vscode-eslint",
-    "pkief.material-icon-theme",
+    "typescriptteam.native-preview",
     "esbenp.prettier-vscode"
   ]
 }
