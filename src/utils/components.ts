@@ -33,11 +33,13 @@ export function button(
   custom_id: string,
   style: 1 | 2 | 3 | 4,
   emoji: APIMessageComponentEmoji | undefined = undefined,
+  disabled: boolean = false,
 ): APIButtonComponentWithCustomId {
   return {
     type: 2,
     label,
     custom_id,
+    disabled,
     style,
     emoji,
   };
@@ -144,12 +146,14 @@ export function linkButton(
   label: string,
   url: string,
   emoji?: APIMessageComponentEmoji,
+  disabled: boolean = false,
 ): {
   type: 2;
   label: string;
   url: string;
   style: 5;
   emoji?: APIMessageComponentEmoji;
+  disabled: boolean;
 } {
   return {
     type: 2,
@@ -157,5 +161,6 @@ export function linkButton(
     url,
     style: 5,
     emoji,
+    disabled,
   };
 }

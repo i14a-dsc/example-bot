@@ -4,6 +4,7 @@ import fs from 'fs';
  * Simple file-based key-value database using JSON for storage.
  */
 export class DataBase {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   private data: any;
   private path: string;
 
@@ -16,6 +17,7 @@ export class DataBase {
     return this.data[key];
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   set(key: string, value: any) {
     this.data[key] = value;
   }

@@ -75,8 +75,8 @@ export class Client extends DiscordClient {
           const relativePath = file.replace('src/events/commands/', '../events/commands/');
           const command = (await import(relativePath)).command as Command;
           this.commands.set(command.data.name, command);
-        } catch (e: any) {
-          FancyLogger.error(`Error loading commands: ${file}, ${e.message}`);
+        } catch (e) {
+          FancyLogger.error(`Error loading commands: ${file}, ${(e as Error).message}`);
         }
       }),
     );
@@ -90,8 +90,8 @@ export class Client extends DiscordClient {
           const button = await import(relativePath);
           const fileName = file.replace('src/events/buttons/', '').replace('.ts', '');
           this.buttons.set(fileName, button.run);
-        } catch (e: any) {
-          FancyLogger.error(`Error loading button: ${file}, ${e.message}`);
+        } catch (e) {
+          FancyLogger.error(`Error loading button: ${file}, ${(e as Error).message}`);
         }
       }),
     );
@@ -104,8 +104,8 @@ export class Client extends DiscordClient {
           const fileName = file.split('/').pop()!;
           const selectMenu = await import(`../events/selectMenus/${fileName}`);
           this.selectMenus.set(fileName.replace('.ts', ''), selectMenu.run);
-        } catch (e: any) {
-          FancyLogger.error(`Error loading select menu: ${file}, ${e.message}`);
+        } catch (e) {
+          FancyLogger.error(`Error loading select menu: ${file}, ${(e as Error).message}`);
         }
       }),
     );
@@ -118,8 +118,8 @@ export class Client extends DiscordClient {
           const fileName = file.split('/').pop()!;
           const modal = await import(`../events/modals/${fileName}`);
           this.modals.set(fileName.replace('.ts', ''), modal.run);
-        } catch (e: any) {
-          FancyLogger.error(`Error loading modal: ${file}, ${e.message}`);
+        } catch (e) {
+          FancyLogger.error(`Error loading modal: ${file}, ${(e as Error).message}`);
         }
       }),
     );
@@ -132,8 +132,8 @@ export class Client extends DiscordClient {
           const fileName = file.split('/').pop()!;
           const complete = await import(`../events/completes/${fileName}`);
           this.completes.set(fileName.replace('.ts', ''), complete.run);
-        } catch (e: any) {
-          FancyLogger.error(`Error loading complete: ${file}, ${e.message}`);
+        } catch (e) {
+          FancyLogger.error(`Error loading complete: ${file}, ${(e as Error).message}`);
         }
       }),
     );
@@ -146,8 +146,8 @@ export class Client extends DiscordClient {
           const fileName = file.split('/').pop()!;
           const messageCommand = await import(`../events/messages/${fileName}`);
           this.messageCommands.set(fileName.replace('.ts', ''), messageCommand.run);
-        } catch (e: any) {
-          FancyLogger.error(`Error loading message command: ${file}, ${e.message}`);
+        } catch (e) {
+          FancyLogger.error(`Error loading message command: ${file}, ${(e as Error).message}`);
         }
       }),
     );

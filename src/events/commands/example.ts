@@ -42,6 +42,7 @@ export const command: Command = {
             separator(),
             actionRow(
               button('Example button', 'example_button', 1),
+              button('Example disabled button', 'example_disabled_button', 1, undefined, true),
               button('Example modal', 'example_modal', 1),
               button('Delete message', 'delete-message', 4, { name: '🗑️' }),
             ),

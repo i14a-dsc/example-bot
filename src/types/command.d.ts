@@ -12,7 +12,7 @@ import type {
 
 export interface Command {
   data: API;
-  /* eslint-disable no-unused-vars */
+  /* eslint-disable-next-line */
   run: (interaction: ChatInputCommandInteraction) => Promise<any>;
 }
 

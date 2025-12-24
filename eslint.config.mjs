@@ -1,5 +1,6 @@
 import unusedImports from 'eslint-plugin-unused-imports';
 import tsParser from '@typescript-eslint/parser';
+import tsEslint from 'typescript-eslint';
 import { includeIgnoreFile } from '@eslint/compat';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +11,7 @@ const gitignorePath = path.resolve(__dirname, '.gitignore');
 const prettierignorePath = path.resolve(__dirname, '.prettierignore');
 
 export default [
+  ...tsEslint.configs.recommended,
   includeIgnoreFile(gitignorePath),
   includeIgnoreFile(prettierignorePath),
   {
