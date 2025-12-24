@@ -1,14 +1,9 @@
-/**
- * Entry point for the Discord bot application.
- * Initializes the client and handles process events.
- * @module index
- */
 import { Client } from './utils/client';
 import { getConfig } from './config/config';
 import { FancyLogger } from './utils/logger';
 import { checkLockfile, createLockfile } from './utils/utils';
 
-FancyLogger.rainbow(['Starting up...\n', 'Powered by Discord.js V14'], `title:${getConfig().name}`);
+FancyLogger.rainbow(['Starting up...\n', 'Powered by Discord.js V14'], { title: getConfig().name });
 
 if (!process.argv.some(arg => arg.replace(/\\/g, '/').endsWith('src/index.ts'))) {
   FancyLogger.error(

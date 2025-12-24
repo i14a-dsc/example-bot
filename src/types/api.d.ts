@@ -9,3 +9,7 @@ export type flags = BitFieldResolvable<
 >[];
 
 export type embeds = (JSONEncodable<APIEmbed> | APIEmbed)[];
+
+export interface FancyLoggerOptions {
+  title?: string;
+}

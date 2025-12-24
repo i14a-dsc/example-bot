@@ -5,8 +5,9 @@ import boxen from 'boxen';
 import chalk from 'chalk';
 import { replace } from './placeholder';
 import { getConfig } from '../config/config';
+import type { FancyLoggerOptions } from '../types/api';
 
-export async function logEvent(guild: Guild, embed: EmbedBuilder) {
+export async function logEvent(guild: Guild, embed: EmbedBuilder): Promise<void> {
   const settings = await getGuildSettings(guild.id);
   if (!settings.logChannel) {
     return;
@@ -26,17 +27,13 @@ export class FancyLogger {
   /**
    * Log with green color box.
    * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
+   * @param title The title of message
    * @example
    * FancyLogger.success('Success!');
-   * FancyLogger.success('Success: {0}', 'Save data', 'title:🎊 Successfully!');
    */
-  static success(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
+  static success(message: string | string[], options?: FancyLoggerOptions) {
+    const { title } = options ?? {};
+    const content = replace(message);
     const boxedMessage = boxen(chalk.green.bold(content), {
       padding: 1,
       margin: 1,
@@ -53,17 +50,13 @@ export class FancyLogger {
    * Log with blue color box.
    *
    * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
+   * @param title The title of message
    * @example
    * FancyLogger.info('An info message');
-   * FancyLogger.info('Info: {0}', 'Version 1.0', 'title:My Info');
    */
-  static info(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
+  static info(message: string | string[], options?: FancyLoggerOptions) {
+    const { title } = options ?? {};
+    const content = replace(message);
     const boxedMessage = boxen(chalk.blue.bold(content), {
       padding: 1,
       margin: 1,
@@ -80,17 +73,13 @@ export class FancyLogger {
    * Log with yellow color box.
    *
    * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
+   * @param title The title of message
    * @example
    * FancyLogger.warning('Be careful!');
-   * FancyLogger.warning('Warning: {0}', 'Low battery', 'title:⚡ Caution');
    */
-  static warning(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
+  static warning(message: string | string[], options?: FancyLoggerOptions) {
+    const { title } = options ?? {};
+    const content = replace(message);
     const boxedMessage = boxen(chalk.yellow.bold(content), {
       padding: 1,
       margin: 1,
@@ -107,17 +96,13 @@ export class FancyLogger {
    * Log with red color box.
    *
    * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
+   * @param title The title of message
    * @example
-   * FancyLogger.error('An error has occurred');
-   * FancyLogger.error('Failed: {0}', 'Connection', 'title:Fatal Error');
+   * FancyLogger.error(['An error has occurred');
    */
-  static error(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
+  static error(message: string | string[], options?: FancyLoggerOptions) {
+    const { title } = options ?? {};
+    const content = replace(message);
     const boxedMessage = boxen(chalk.red.bold(content), {
       padding: 1,
       margin: 1,
@@ -133,17 +118,13 @@ export class FancyLogger {
   /**
    * Log with rainbow colors
    * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
+   * @param title The title of message
    * @example
    * FancyLogger.rainbow('Rainbow');
-   * FancyLogger.rainbow('Colorful: {0}', 'Text', 'title:🌈 Custom');
    */
-  static rainbow(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
+  static rainbow(message: string | string[], options?: FancyLoggerOptions) {
+    const { title } = options ?? {};
+    const content = replace(message);
     const rainbowColors = [chalk.red, chalk.yellow, chalk.green, chalk.cyan, chalk.blue, chalk.magenta];
     let rainbowContent: string;
     if (rainbowColors.length === 0) {
@@ -171,68 +152,16 @@ export class FancyLogger {
   }
 
   /**
-   * Log the message with a gradient box.
-   *
-   * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
-   * @example
-   * FancyLogger.gradient('Gradient');
-   * FancyLogger.gradient('Custom: {0}', 'Gradient', 'title:🎨 Custom');
-   */
-  static gradient(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
-    const gradientColors = [
-      chalk.hex('#FF6B6B'),
-      chalk.hex('#4ECDC4'),
-      chalk.hex('#45B7D1'),
-      chalk.hex('#96CEB4'),
-      chalk.hex('#FFEAA7'),
-      chalk.hex('#DDA0DD'),
-    ];
-    let gradientContent: string;
-    if (gradientColors.length === 0) {
-      gradientContent = content;
-    } else {
-      gradientContent = content
-        .split('')
-        .map((char, index) => {
-          const colorFn = gradientColors[index % gradientColors.length];
-          return colorFn ? colorFn(char) : char;
-        })
-        .join('');
-    }
-
-    const boxedMessage = boxen(gradientContent, {
-      padding: 1,
-      margin: 1,
-      borderStyle: 'bold',
-      borderColor: 'cyan',
-      backgroundColor: '#1a1a1a',
-      title: title ?? chalk.cyan.bold('🎨 GRADIENT'),
-      titleAlignment: 'center',
-    });
-    console.log(boxedMessage);
-  }
-
-  /**
    * with a sparkle effect.
    *
    * @param message Message string or array
-   * @param args Placeholder replacement arguments, or the last argument if it starts with `title:`
+   * @param title The title of message
    * @example
    * FancyLogger.sparkle('Sparkle!');
-   * FancyLogger.sparkle('Placeholder: {0}', 'Event', 'title:⭐ Custom title');
    */
-  static sparkle(message: string | string[], ...args: any[]) {
-    let title: string | undefined;
-    if (typeof args[args.length - 1] === 'string' && args[args.length - 1].startsWith('title:')) {
-      title = args.pop().replace(/^title:/, '');
-    }
-    const content = replace(message, ...args);
+  static sparkle(message: string | string[], options?: FancyLoggerOptions) {
+    const { title } = options ?? {};
+    const content = replace(message);
     const sparkleContent = `✨ ${content} ✨`;
     const boxedMessage = boxen(chalk.cyan.bold(sparkleContent), {
       padding: 1,
