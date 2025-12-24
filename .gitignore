@@ -8,7 +8,6 @@
 
 # Data files
 data/*.json
-data/config.json
 src/modules/
 
 # Logs

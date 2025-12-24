@@ -169,7 +169,7 @@ export class Client extends DiscordClient {
   }
 
   private async createDirectoryStructure() {
-    const dirs = ['logs', 'data', 'data/guild_settings', 'config'];
+    const dirs = ['logs', 'data'];
 
     const tasks = dirs.map(async dir => {
       try {
