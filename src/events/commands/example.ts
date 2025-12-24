@@ -26,7 +26,7 @@ export const command: Command = {
     contexts: [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel],
   },
   async run(interaction) {
-    const test = interaction.options.getString('test');
+    const test = interaction.options.getString('example');
     const noEphemeral = !interaction.options.getBoolean('no_ephemeral');
     if (test) {
       return interaction.reply(`You selected ${test}`);
