@@ -7,7 +7,7 @@ const placeholders: { name: string; value: string }[] = fs.existsSync('data/plac
 
 /**
  * ANSI color codes and custom color codes for terminal output.
- * @type {Object.<string, string>}
+ * @type {Object<string, string>}
  */
 export const colors = {
   red: '\x1b[31m',

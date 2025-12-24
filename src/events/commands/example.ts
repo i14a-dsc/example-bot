@@ -52,8 +52,8 @@ export const command: Command = {
                 options: [
                   { label: 'Test 1', value: '1' },
                   { label: 'Test 2', value: '2' },
-                  { label: 'Test 3 (random value)', value: Math.floor(Math.random() * 96 + 4).toString() },
-                  { label: `Test 4 (random name) ${Math.floor(Math.random() * 100).toString()}`, value: '3' },
+                  { label: `Test ${Math.floor(Math.random() * 100).toString()} (random name)`, value: '3' },
+                  { label: 'Test 4 (random value)', value: Math.floor(Math.random() * 96 + 4).toString() },
                 ],
                 placeholder: 'Example select menu',
               }),
