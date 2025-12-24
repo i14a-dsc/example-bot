@@ -13,8 +13,8 @@ export async function messageCommandHandler(message: Message) {
   }
   try {
     await command(message, args);
-  } catch (error: any) {
-    console.error(error);
-    await message.reply({ flags: MessageFlags.IsComponentsV2, components: errorComponent(error.message) });
+  } catch (e) {
+    console.error(e);
+    await message.reply({ flags: MessageFlags.IsComponentsV2, components: errorComponent((e as Error).message) });
   }
 }

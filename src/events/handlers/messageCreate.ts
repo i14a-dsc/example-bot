@@ -11,7 +11,7 @@ export async function messageCreate(message: Message) {
     if (message.content.startsWith(client.config.prefix) && message.channel.isSendable()) {
       return messageCommandHandler(message);
     }
-  } catch (e: any) {
+  } catch (e) {
     console.error('Error in prefix command handler:', e);
     return;
   }
