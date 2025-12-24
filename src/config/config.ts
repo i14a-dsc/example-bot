@@ -1,4 +1,4 @@
-import type { Permissions, Versions } from '../types/config';
+import type { Config, Permissions, Versions } from '../types/config';
 import { getArgs } from '../utils/args';
 
 const versions: Versions = {
@@ -20,32 +20,29 @@ const version = `${versions.major}.${versions.minor}.${versions.patch}-${version
 /**
  * Main config
  */
-const config = {
+const config: Config = {
   name: 'change-here',
   prefix: development ? 'y.' : 'y!',
   version,
   versions,
   development,
   production,
-  permissions: {
-    dev: process.env['developer'] ? process.env['developer'].split(',') ?? [] : [],
-    admin: process.env['admin'] ? [...process.env['admin'].split(','), ...dev] : [...dev],
-    blacklist: process.env['blacklist'] ? process.env['blacklist'].split(',') ?? [] : [],
-  } as Permissions,
-  token: development ? process.env['DEV_TOKEN'] ?? process.env['TOKEN'] : process.env['TOKEN'],
-  clientId: development ? process.env['DEV_CLIENT_ID'] ?? process.env['CLIENT_ID'] : process.env['CLIENT_ID'],
 };
 
 export function getConfig() {
+  config.token = development ? process.env['DEV_TOKEN'] ?? process.env['TOKEN'] : process.env['TOKEN'];
+  config.clientId = development ? process.env['DEV_CLIENT_ID'] ?? process.env['CLIENT_ID'] : process.env['CLIENT_ID'];
   if (!config.token) {
     throw new Error('No token provided.');
   }
   if (!config.clientId) {
     throw new Error('No application id provided.');
   }
-  if (!config.name) {
-    throw new Error('No bot name provided.');
-  }
+  config.permissions = {
+    dev: process.env['developer'] ? process.env['developer'].split(',') ?? [] : [],
+    admin: process.env['admin'] ? [...process.env['admin'].split(','), ...dev] : [...dev],
+    blacklist: process.env['blacklist'] ? process.env['blacklist'].split(',') ?? [] : [],
+  } as Permissions;
   if (!config.permissions.dev.length) {
     throw new Error('No devevelopers provided.');
   }

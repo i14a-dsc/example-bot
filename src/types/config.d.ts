@@ -19,3 +19,15 @@ export interface Permissions {
   admin: string[];
   blacklist: string[];
 }
+
+export interface Config {
+  name: string;
+  prefix: string;
+  version: string;
+  versions: Versions;
+  development: boolean;
+  production: boolean;
+  token?: string | undefined;
+  clientId?: string | undefined;
+  permissions?;
+}
