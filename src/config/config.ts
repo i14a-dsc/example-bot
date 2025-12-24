@@ -36,11 +36,6 @@ const config = {
   clientId: development ? process.env['DEV_CLIENT_ID'] ?? process.env['CLIENT_ID'] : process.env['CLIENT_ID'],
 };
 
-/**
- * Get the bot configuration, validating required fields.
- * @throws {Error} If required config values are missing
- * @returns {object} The bot configuration object
- */
 export function getConfig() {
   if (!config.token) {
     throw new Error('No token provided.');

@@ -5,10 +5,6 @@ const placeholders: { name: string; value: string }[] = fs.existsSync('data/plac
   ? JSON.parse(fs.readFileSync('data/placeholders.json', 'utf-8'))
   : [];
 
-/**
- * ANSI color codes and custom color codes for terminal output.
- * @type {Object<string, string>}
- */
 export const colors = {
   red: '\x1b[31m',
   green: '\x1b[32m',

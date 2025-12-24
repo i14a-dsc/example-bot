@@ -192,10 +192,6 @@ export class Client extends DiscordClient {
     }
   }
 
-  /**
-   * Stop the bot and exit the process.
-   * @param exitCode The exit code to use (default 0)
-   */
   public async stop(exitCode: number = 0): Promise<never> {
     await FancyLogger.loading('Shutting down...', '❎ Stopping');
     await this.destroy();
@@ -203,44 +199,22 @@ export class Client extends DiscordClient {
     process.exit(exitCode);
   }
 
-  /**
-   * Get a channel by its ID.
-   * @param id Channel ID
-   */
   public getChannel(id: string) {
     return this.channels.cache.get(id);
   }
 
-  /**
-   * Get a user by their ID.
-   * @param id User ID
-   */
   public getUser(id: string) {
     return this.users.cache.get(id);
   }
 
-  /**
-   * Get a guild by its ID.
-   * @param id Guild ID
-   */
   public getGuild(id: string) {
     return this.guilds.cache.get(id);
   }
 
-  /**
-   * Get a member by user ID and guild ID.
-   * @param userId User ID
-   * @param guildId Guild ID
-   */
   public getMember(userId: string, guildId: string) {
     return this.getGuild(guildId)?.members.cache.get(userId);
   }
 
-  /**
-   * Get a role by role ID and guild ID.
-   * @param roleId Role ID
-   * @param guildId Guild ID
-   */
   public getRole(roleId: string, guildId: string) {
     return this.getGuild(guildId)?.roles.cache.get(roleId);
   }
