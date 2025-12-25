@@ -4,19 +4,5 @@
     "Terminate batch job (Y/N)": "Y\r",
     "バッチ ジョブを終了しますか (Y/N)?": "Y\r"
   },
-  "vscord.status.details.text.debugging": "Developing Typescript Bot",
-  "vscord.status.details.text.editing": "Developing Typescript Bot",
-  "vscord.status.details.text.notInFile": "Developing Typescript Bot",
-  "vscord.status.details.text.viewing": "Developing Typescript Bot",
-  "vscord.status.details.text.noWorkSpaceText": "Developing Typescript Bot",
-  "vscord.status.state.text.debugging": "Debugging...",
-  "vscord.status.state.text.editing": "Working on {file_name}{file_extension}:{current_line}",
-  "vscord.status.state.text.viewing": "Viewing {file_name}{file_extension}",
-  "vscord.status.image.large.debugging.text": "Debugging a  file",
-  "vscord.status.image.large.editing.text": "{file_name}{file_extension} ({LANG})",
-  "vscord.status.image.large.notInFile.text": "Not in a file",
-  "vscord.status.image.large.viewing.text": "{file_name}{file_extension} ({LANG})",
-  "vscord.status.details.idle.enabled": false,
-  "vscord.status.state.text.notInFile": "AFK",
   "typescript.experimental.useTsgo": true
 }
