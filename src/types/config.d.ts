@@ -25,9 +25,11 @@ export interface Config {
   prefix: string;
   version: string;
   versions: Versions;
+  lockFileName?: string;
   development: boolean;
   production: boolean;
+  ignoreExample: boolean;
   token?: string | undefined;
   clientId?: string | undefined;
-  permissions?;
+  permissions: Permissions;
 }

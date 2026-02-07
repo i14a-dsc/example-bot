@@ -35,16 +35,20 @@ export function isEphemeral(ephemeral: boolean | null | undefined = false): numb
 }
 
 export async function checkLockfile(): Promise<boolean> {
-  if (fs.existsSync('./.lock')) {
+  if (fs.existsSync(config.lockFileName ?? './.lock')) {
     return true;
   }
   return false;
 }
 
 export function createLockfile(): void {
-  fs.writeFileSync('./.lock', '');
+  fs.writeFileSync(config.lockFileName ?? './.lock', '');
 }
 
 export function deleteLockfile(): void {
-  fs.unlinkSync('./.lock');
+  fs.unlinkSync(config.lockFileName ?? './.lock');
+}
+
+export function isExampleFile(fileName: string): boolean {
+  return config.ignoreExample || fileName === 'example';
 }

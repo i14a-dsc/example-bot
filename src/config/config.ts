@@ -8,18 +8,12 @@ const versions: Versions = {
   patchline: 'dev',
 };
 
-/**
- * Do not touch
- */
 const _development: boolean = versions.patchline === 'dev' || getArgs().includes('--development');
 const production: boolean = getArgs().includes('--production') || !_development;
 const development: boolean = _development || !production;
 const dev = process.env['developer'] ? process.env['developer'].split(',') ?? [] : [];
 const version = `${versions.major}.${versions.minor}.${versions.patch}-${versions.patchline}`;
 
-/**
- * Main config
- */
 const config: Config = {
   name: 'change-here',
   prefix: development ? 'y.' : 'y!',
@@ -27,6 +21,12 @@ const config: Config = {
   versions,
   development,
   production,
+  ignoreExample: true,
+  permissions: {
+    dev: [],
+    admin: [],
+    blacklist: [],
+  },
 };
 
 export function getConfig() {
@@ -38,11 +38,9 @@ export function getConfig() {
   if (!config.clientId) {
     throw new Error('No application id provided.');
   }
-  config.permissions = {
-    dev: process.env['developer'] ? process.env['developer'].split(',') ?? [] : [],
-    admin: process.env['admin'] ? [...process.env['admin'].split(','), ...dev] : [...dev],
-    blacklist: process.env['blacklist'] ? process.env['blacklist'].split(',') ?? [] : [],
-  } as Permissions;
+  config.permissions.dev = process.env['developer'] ? process.env['developer'].split(',') ?? [] : [];
+  config.permissions.admin = process.env['admin'] ? [...process.env['admin'].split(','), ...dev] : [...dev];
+  config.permissions.blacklist = process.env['blacklist'] ? process.env['blacklist'].split(',') ?? [] : [];
   if (!config.permissions.dev.length) {
     throw new Error('No devevelopers provided.');
   }

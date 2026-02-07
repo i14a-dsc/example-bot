@@ -20,7 +20,7 @@ import { FancyLogger } from './logger';
 import { ready } from '../events/handlers/ready';
 import { interactionCreate } from '../events/handlers/interactionCreate';
 import { messageCreate } from '../events/handlers/messageCreate';
-import { deleteLockfile } from './utils';
+import { deleteLockfile, isExampleFile } from './utils';
 import { mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 
@@ -72,6 +72,9 @@ export class Client extends DiscordClient {
     await Promise.allSettled(
       commandFiles.map(async file => {
         try {
+          if (isExampleFile(file)) {
+            return;
+          }
           const relativePath = file.replace('src/events/commands/', '../events/commands/');
           const command = (await import(relativePath)).command as Command;
           this.commands.set(command.data.name, command);
@@ -86,6 +89,9 @@ export class Client extends DiscordClient {
     await Promise.allSettled(
       buttonFiles.map(async file => {
         try {
+          if (isExampleFile(file)) {
+            return;
+          }
           const relativePath = file.replace('src/events/buttons/', '../events/buttons/');
           const button = await import(relativePath);
           const fileName = file.replace('src/events/buttons/', '').replace('.ts', '');
@@ -101,6 +107,9 @@ export class Client extends DiscordClient {
     await Promise.allSettled(
       selectMenuFiles.map(async file => {
         try {
+          if (isExampleFile(file)) {
+            return;
+          }
           const fileName = file.split('/').pop()!;
           const selectMenu = await import(`../events/selectMenus/${fileName}`);
           this.selectMenus.set(fileName.replace('.ts', ''), selectMenu.run);
@@ -115,6 +124,9 @@ export class Client extends DiscordClient {
     await Promise.allSettled(
       modalFiles.map(async file => {
         try {
+          if (isExampleFile(file)) {
+            return;
+          }
           const fileName = file.split('/').pop()!;
           const modal = await import(`../events/modals/${fileName}`);
           this.modals.set(fileName.replace('.ts', ''), modal.run);
@@ -129,6 +141,9 @@ export class Client extends DiscordClient {
     await Promise.allSettled(
       completeFiles.map(async file => {
         try {
+          if (isExampleFile(file)) {
+            return;
+          }
           const fileName = file.split('/').pop()!;
           const complete = await import(`../events/completes/${fileName}`);
           this.completes.set(fileName.replace('.ts', ''), complete.run);
@@ -143,6 +158,9 @@ export class Client extends DiscordClient {
     await Promise.allSettled(
       messageCommandFiles.map(async file => {
         try {
+          if (isExampleFile(file)) {
+            return;
+          }
           const fileName = file.split('/').pop()!;
           const messageCommand = await import(`../events/messages/${fileName}`);
           this.messageCommands.set(fileName.replace('.ts', ''), messageCommand.run);
