@@ -1,27 +1,8 @@
-import { client } from '..';
-import { getGuildSettings } from './guildSettings';
-import type { Guild, EmbedBuilder } from 'discord.js';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import { replace } from './placeholder';
 import { getConfig } from '../config/config';
 import type { FancyLoggerOptions } from '../types/api';
-
-export async function logEvent(guild: Guild, embed: EmbedBuilder): Promise<void> {
-  const settings = await getGuildSettings(guild.id);
-  if (!settings.logChannel) {
-    return;
-  }
-
-  try {
-    const logChannel = await client.channels.fetch(settings.logChannel);
-    if (logChannel?.isSendable()) {
-      await logChannel.send({ embeds: [embed] });
-    }
-  } catch (error) {
-    console.error(`Failed to send log to channel ${settings.logChannel} in guild ${guild.id}:`, error);
-  }
-}
 
 export class FancyLogger {
   /**
