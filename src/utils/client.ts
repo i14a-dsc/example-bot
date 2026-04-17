@@ -60,7 +60,7 @@ export class Client extends DiscordClient {
   async init() {
     FancyLogger.loading('Initializing Discord bot');
 
-    this.createDirectoryStructure();
+    await this.createDirectoryStructure();
 
     this.on('messageCreate', messageCreate);
     this.on('interactionCreate', interactionCreate);
@@ -172,7 +172,7 @@ export class Client extends DiscordClient {
 
     if (this.commands.size > 0) {
       FancyLogger.loading(`Uploading ${this.commands.size} slash commands...`, '📤 Commands');
-      this._uploadCommands();
+      await this._uploadCommands();
     }
 
     FancyLogger.loading('Logging in to Discord', '🔑 Client');
@@ -181,13 +181,19 @@ export class Client extends DiscordClient {
   }
 
   private async _uploadCommands() {
-    await this.rest.put(Routes.applicationCommands(this.config.clientId ?? ''), {
-      body: this.commands.map(command => command.data),
-    });
+    try {
+      await this.rest.put(Routes.applicationCommands(this.config.clientId ?? ''), {
+        body: this.commands.map(command => command.data),
+      });
+      FancyLogger.success(`Successfully uploaded ${this.commands.size} commands`);
+    } catch (error) {
+      FancyLogger.error(`Failed to upload commands: ${(error as Error).message}`);
+      throw error;
+    }
   }
 
   private async createDirectoryStructure() {
-    const dirs = ['logs', 'data'];
+    const dirs = ['data'];
 
     const tasks = dirs.map(async dir => {
       try {
@@ -210,10 +216,14 @@ export class Client extends DiscordClient {
     }
   }
 
-  public async stop(exitCode: number = 0): Promise<never> {
-    await FancyLogger.loading('Shutting down...', '❎ Stopping');
-    await this.destroy();
-    deleteLockfile();
+  public async stop(exitCode: number = 0, reason?: string): Promise<never> {
+    await FancyLogger.loading('Shutting down...', `❎ ${reason ? reason : 'Stopping'}`);
+    try {
+      await this.destroy();
+    } catch (error) {
+      console.error('Error during client destruction:', error);
+    }
+    await deleteLockfile();
     process.exit(exitCode);
   }
 

@@ -1,10 +1,13 @@
 import { ComponentType, MessageFlags } from 'discord.js';
 import { client } from '../..';
 import type { Command } from '../../types/command';
-import { errorComponent, textDisplay } from '../../utils/components';
+import { textDisplay } from '../../utils/components';
 import { checkPermission } from '../../utils/utils';
 
 export const command: Command = {
+  permission: {
+    dev: true,
+  },
   data: {
     name: 'restart',
     description: 'Restarts the bot.',
@@ -23,11 +26,6 @@ export const command: Command = {
         components: [{ type: ComponentType.Container, components: [textDisplay('ℹ️ Restarting...')] }],
       });
       await client.stop();
-    } else {
-      interaction.editReply({
-        flags: [MessageFlags.IsComponentsV2],
-        components: errorComponent("Sorry, you don't have permission to use this command."),
-      });
     }
   },
 };

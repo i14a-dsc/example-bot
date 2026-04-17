@@ -1,6 +1,5 @@
 import type {
   APIApplicationCommandOption,
-  ApplicationCommandDataResolvable,
   ApplicationCommandType,
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
@@ -11,13 +10,19 @@ import type {
 } from 'discord.js';
 
 export interface Command {
+  permission?: {
+    dev?: boolean;
+    admin?: boolean;
+    trusted?: boolean;
+    blacklist?: boolean;
+  };
   data: API;
   /* eslint-disable-next-line */
-  run: (interaction: ChatInputCommandInteraction) => Promise<any>;
+  run: (interaction: ChatInputCommandInteraction) => Promise<void> | void;
 }
 
 export interface API {
-  type: ApplicationCommandType | number | Partial<ApplicationCommandDataResolvable>;
+  type: ApplicationCommandType;
   application_id?: Snowflake;
   integration_types?: ApplicationIntegrationType[];
   guild_id?: Snowflake;
@@ -29,6 +34,5 @@ export interface API {
   default_member_permissions?: Permissions | null;
   default_permission?: boolean;
   nsfw?: boolean;
-  integration_types: ApplicationIntegrationType[];
   contexts?: InteractionContextType[] | null;
 }

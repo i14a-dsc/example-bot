@@ -21,17 +21,17 @@
     "chalk": "^5.6.2",
     "discord-api-types": "^0.38.37",
     "discord.js": "^14.25.1",
-    "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "fast-glob": "^3.3.3",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "simple-git": "^3.36.0"
   },
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun run --hot --watch src/index.ts --development",
     "build": "echo Build is unsupported for this project. Because it uses dynamic imports.",
     "rmcache": "rm -rf node_modules/.cache && echo Cache removed.",
-    "lint": "echo Running tsc... && tsgo --noEmit && echo Linting completed.",
+    "lint": "echo Linting... && eslint . && tsgo --noEmit && echo Linting completed.",
     "lint:fix": "echo Running eslint --fix... && eslint . --fix &&  echo Fixing completed.",
     "watch": "bun run --hot src/index.ts",
     "test": "echo No tests defined.",

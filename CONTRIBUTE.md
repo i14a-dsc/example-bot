@@ -19,6 +19,8 @@ await interaction.reply(
 )
 ```
 
+Don't provide secure information in error message.
+
 ## Commit message rule
 
 **1. Write Specifics**

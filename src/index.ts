@@ -3,7 +3,11 @@ import { getConfig } from './config/config';
 import { FancyLogger } from './utils/logger';
 import { checkLockfile, createLockfile } from './utils/utils';
 
-FancyLogger.rainbow(['Starting up...\n', 'Powered by Discord.js V14'], { title: getConfig().name });
+const config = getConfig();
+
+FancyLogger.rainbow(['Starting up...\n', 'Powered by Discord.js V14'], {
+  title: config.name,
+});
 
 if (!process.argv.some(arg => arg.replace(/\\/g, '/').endsWith('src/index.ts'))) {
   FancyLogger.error(
@@ -27,7 +31,30 @@ await client.init();
 
 export { client };
 
+let isShuttingDown = false;
+
 process.on('SIGINT', async () => {
-  await client.stop();
-  return false;
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  await client.stop(0, 'SIGINT');
+});
+
+process.on('SIGTERM', async () => {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  await client.stop(0, 'SIGTERM');
+});
+
+process.on('uncaughtException', async e => {
+  FancyLogger.error('uncaughtException');
+  console.error(e);
+  if (!isShuttingDown) {
+    isShuttingDown = true;
+    await client.stop(1, 'uncaughtException');
+  }
+});
+
+process.on('unhandledRejection', async e => {
+  FancyLogger.error('unhandledRejection: ');
+  console.error(e);
 });

@@ -1,8 +1,13 @@
 {
   "editor.indentSize": 2,
-  "terminal.integrated.autoReplies": {
-    "Terminate batch job (Y/N)": "Y\r",
-    "バッチ ジョブを終了しますか (Y/N)?": "Y\r"
+  "typescript.experimental.useTsgo": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.experimental.useTsgo": true
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

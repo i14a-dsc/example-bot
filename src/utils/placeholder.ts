@@ -42,10 +42,13 @@ export const colors = {
 };
 
 export class Placeholder {
-  public declare result: string;
+  declare public result: string;
   declare noColor: boolean;
 
-  constructor(public value: string | string[] = '', noColor: boolean = false) {
+  constructor(
+    public value: string | string[] = '',
+    noColor: boolean = false,
+  ) {
     if (Array.isArray(value)) {
       this.result = value.join('\n');
     } else this.result = value;

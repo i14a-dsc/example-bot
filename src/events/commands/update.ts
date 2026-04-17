@@ -1,9 +1,13 @@
-import { exec, execSync } from 'child_process';
 import type { Command } from '../../types/command';
 import { client } from '../..';
-import { ComponentType } from 'discord.js';
-import { errorComponent, separator, textDisplay } from '../../utils/components';
-import { checkPermission } from '../../utils/utils';
+import { ApplicationCommandOptionType, ComponentType } from 'discord.js';
+import { separator, textDisplay } from '../../utils/components';
+import { simpleGit } from 'simple-git';
+import { unlink } from 'fs/promises';
+import { existsSync } from 'fs';
+import { FancyLogger } from '../../utils/logger';
+
+const git = simpleGit();
 
 const emojis = {
   fail: '❌',
@@ -12,22 +16,38 @@ const emojis = {
 };
 
 export const command: Command = {
+  permission: {
+    admin: true,
+  },
   data: {
     name: 'update',
     description: 'Update the bot from git.',
     type: 1,
+    options: [
+      {
+        name: 'precleanup',
+        description: 'Pre clean up bun lockfile before update',
+        type: ApplicationCommandOptionType.Boolean,
+      },
+    ],
     contexts: [0, 1, 2],
     integration_types: [0, 1],
   },
   run: async interaction => {
-    if (!checkPermission('admin', interaction.user)) {
-      await interaction.reply({
-        components: errorComponent('You do not have permission to use this command.'),
-        flags: [64, 32768],
-      });
-      return;
-    }
     const start = Date.now();
+    const getDuration = () => `-# Took ${(Date.now() - start) / 1000} seconds.`;
+
+    const updateDisplay = async (lines: string[]) => {
+      await interaction.editReply({
+        components: [
+          {
+            type: ComponentType.Container,
+            components: [textDisplay('# Update'), separator(), textDisplay(lines)],
+          },
+        ],
+      });
+    };
+
     await interaction.reply({
       flags: [64, 32768],
       components: [
@@ -37,149 +57,85 @@ export const command: Command = {
         },
       ],
     });
+
     try {
-      await interaction.editReply({
-        components: [
-          {
-            type: ComponentType.Container,
-            components: [textDisplay('# Update'), separator(), textDisplay(`${emojis.info} Fetching updates...`)],
-          },
-        ],
-      });
-      execSync('rm -rf bun.lockb bun.lock', { stdio: 'inherit' });
-      const child = await exec('git pull');
-      const output = await new Promise<string>((resolve, reject) => {
-        let data = '';
-        child.stdout?.on('data', chunk => (data += chunk));
-        child.stdout?.on('end', () => resolve(data));
-        child.stdout?.on('error', reject);
-      });
+      const precleanup = interaction.options.getBoolean('precleanup') ?? false;
+      if (precleanup) {
+        await updateDisplay([`${emojis.info} Pre Cleaning up...`]);
+        try {
+          if (existsSync('bun.lockb')) await unlink('bun.lockb');
+          if (existsSync('bun.lock')) await unlink('bun.lock');
+        } catch (unlinkErr) {
+          FancyLogger.error('Failed to delete lockfile');
+          console.error(unlinkErr);
+          await updateDisplay(['Failed to delete lockfile. Continuing anyway...', `${emojis.info} Pulling updates...`]);
+        }
+      }
 
-      console.log(output);
+      await updateDisplay([`${emojis.info} Checking git status...`]);
+      const status = await git.status();
 
-      if (output.includes('Already up to date.')) {
-        await interaction.editReply({
-          components: [
-            {
-              type: ComponentType.Container,
-              components: [
-                textDisplay('# Update'),
-                separator(),
-                textDisplay([
-                  'Already up to date.',
-                  `${emojis.fail} Update Aborted.`,
-                  `-# Took ${(Date.now() - start) / 1000} seconds.`,
-                ]),
-              ],
-            },
-          ],
-        });
+      if (!status.isClean()) {
+        await updateDisplay([
+          'Working directory is not clean.',
+          'Please commit or stash your changes first.',
+          `${emojis.fail} Update Aborted.`,
+          getDuration(),
+        ]);
         return;
       }
-      if (output.includes('CONFLICT')) {
-        await interaction.editReply({
-          components: [
-            {
-              type: ComponentType.Container,
-              components: [
-                textDisplay('# Update'),
-                separator(),
-                textDisplay([
-                  'Merge conflict occurred. Please resolve the conflict and commit the changes.',
-                  `${emojis.fail} Update Aborted.`,
-                  `-#Took ${(Date.now() - start) / 1000} seconds.`,
-                ]),
-              ],
-            },
-          ],
-        });
+
+      await updateDisplay([`${emojis.info} Fetching updates...`]);
+      await git.fetch();
+
+      const currentBranch = status.current;
+      if (!currentBranch) {
+        await updateDisplay(['Could not determine current branch.', `${emojis.fail} Update Aborted.`, getDuration()]);
         return;
       }
-      if (output.includes('error')) {
-        await interaction.editReply({
-          components: [
-            {
-              type: ComponentType.Container,
-              components: [
-                textDisplay('# Update'),
-                separator(),
-                textDisplay([
-                  'Update failed.',
-                  `${emojis.fail} Unknown error occurred while fetching updates.`,
-                  `-# Took ${(Date.now() - start) / 1000} seconds.`,
-                ]),
-              ],
-            },
-          ],
-        });
+
+      const log = await git.log([`HEAD..origin/${currentBranch}`]);
+      if (log.total === 0) {
+        await updateDisplay(['Already up to date.', `${emojis.succsess} No updates needed.`, getDuration()]);
         return;
       }
-    } catch (e) {
-      console.error(e);
-      await interaction.editReply({
-        components: [
-          {
-            type: ComponentType.Container,
-            components: [
-              textDisplay('# Update'),
-              separator(),
-              textDisplay([
-                ' Update failed.',
-                `${emojis.fail} Unknown error occurred while fetching updates.`,
-                `-# Took ${(Date.now() - start) / 1000} seconds.`,
-              ]),
-            ],
-          },
-        ],
-      });
+
+      await updateDisplay([`${emojis.info} Pulling ${log.total} update(s)...`]);
+      const pullResult = await git.pull();
+
+      if (pullResult.files.length === 0) {
+        await updateDisplay(['Already up to date.', `${emojis.fail} Update Aborted.`, getDuration()]);
+        return;
+      }
+    } catch (err) {
+      const msg = (err as Error).message;
+      let errorDetail = 'Unknown error occurred.';
+
+      if (msg.includes('Merge conflict') || msg.includes('CONFLICT')) {
+        errorDetail = 'Merge conflict occurred. Please resolve manually and restart the bot.';
+      } else if (msg.includes('Authentication failed') || msg.includes('could not read Username')) {
+        errorDetail = 'Authentication failed. Check your git credentials.';
+      } else if (msg.includes('Could not resolve host')) {
+        errorDetail = 'Could not resolve host. Check your network connection.';
+      } else if (msg.includes('not a git repository')) {
+        errorDetail = 'Not a git repository. Update command requires git.';
+      } else if (msg.includes('Permission denied')) {
+        errorDetail = 'Permission denied. Check file permissions.';
+      } else {
+        errorDetail = `Error: ${msg.substring(0, 100)}`;
+      }
+
+      await updateDisplay([errorDetail, `${emojis.fail} Update Aborted.`, getDuration()]);
+      console.error('Git Error:', msg);
       return;
     }
-    await interaction.editReply({
-      components: [
-        {
-          type: ComponentType.Container,
-          components: [textDisplay('# Update'), separator(), textDisplay(`${emojis.info} Linting...`)],
-        },
-      ],
-    });
-    try {
-      execSync('bun run lint', { stdio: 'inherit' });
-    } catch (e) {
-      console.error(e);
-      await interaction.editReply({
-        components: [
-          {
-            type: ComponentType.Container,
-            components: [
-              textDisplay('# Update'),
-              separator(),
-              textDisplay([
-                'Update failed.',
-                `${emojis.fail} Unknown error occurred while linting.\nCheck the console for more details.`,
-                `-# Took ${(Date.now() - start) / 1000} seconds.`,
-              ]),
-            ],
-          },
-        ],
-      });
-      return;
-    }
-    interaction.editReply({
-      components: [
-        {
-          type: ComponentType.Container,
-          components: [
-            textDisplay('# Update'),
-            separator(),
-            textDisplay([
-              `${emojis.succsess} Update successfully!`,
-              'Restarting...',
-              `-# Took ${(Date.now() - start) / 1000} seconds`,
-            ]),
-          ],
-        },
-      ],
-    });
-    client.stop();
+
+    await updateDisplay([`${emojis.info} Finalizing...`]);
+
+    await updateDisplay([`${emojis.succsess} Update successfully!`, 'Restarting...', getDuration()]);
+
+    setTimeout(() => {
+      client.stop();
+    }, 1000);
   },
 };

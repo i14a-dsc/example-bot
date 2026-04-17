@@ -18,6 +18,7 @@ export interface Permissions {
   dev: string[];
   admin: string[];
   blacklist: string[];
+  trusted: string[];
 }
 
 export interface Config {

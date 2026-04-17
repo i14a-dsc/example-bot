@@ -29,7 +29,8 @@ export const command: Command = {
     const test = interaction.options.getString('example');
     const noEphemeral = !interaction.options.getBoolean('no_ephemeral');
     if (test) {
-      return interaction.reply(`You selected ${test}`);
+      await interaction.reply(`You selected ${test}`);
+      return;
     }
     await interaction.reply({
       flags: [isEphemeral(noEphemeral), MessageFlags.IsComponentsV2],
