@@ -1,11 +1,16 @@
 import {
+  AllowedMentionsTypes,
+  type APIAllowedMentions,
   type APIButtonComponentWithCustomId,
   type APIComponentInContainer,
   type APIMessageComponent,
   type APIMessageComponentEmoji,
+  type APISectionAccessoryComponent,
+  type APISectionComponent,
   type APISelectMenuOption,
   type APISeparatorComponent,
   type APIStringSelectComponent,
+  type APITextDisplayComponent,
   type APITextInputComponent,
   ComponentType,
 } from 'discord.js';
@@ -164,3 +169,21 @@ export function linkButton(
     disabled,
   };
 }
+
+export function section(options: {
+  components: APITextDisplayComponent[];
+  accessory: APISectionAccessoryComponent;
+  id?: number;
+}): APISectionComponent {
+  return {
+    type: ComponentType.Section,
+    components: options.components,
+    accessory: options.accessory,
+    id: options.id,
+  };
+}
+
+export const noMentions: APIAllowedMentions = { parse: [] };
+export const allowMentions: APIAllowedMentions = {
+  parse: [AllowedMentionsTypes.User, AllowedMentionsTypes.Role, AllowedMentionsTypes.Everyone],
+};

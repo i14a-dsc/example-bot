@@ -1,8 +1,8 @@
 <div align="center">
     <h1>Discord.js Example Bot</h1>
-	<p>
-		<a href="https://discord.gg/PTTGPsYwjX"><img src="https://img.shields.io/discord/1270549796742238208?color=5865F2&logo=discord&logoColor=white" alt="Discord" /></a>
-	</p>
+ <p>
+  <a href="https://discord.gg/PTTGPsYwjX"><img src="https://img.shields.io/discord/1270549796742238208?color=5865F2&logo=discord&logoColor=white" alt="Discord" /></a>
+ </p>
 </div>
 
 ## About
@@ -18,25 +18,25 @@ This is a sample repository for a Discord Bot using [Discord.js](https://discord
 
 On Windows, run the following command in Command Prompt:
 
-```
+```bash
 setup.bat
 ```
 
 Or, if Bun is already installed:
 
-```
+```bash
 bun i
 ```
 
 ### 2. Run the bot
 
-```
+```bash
 bun run src/index.ts
 ```
 
 ### 3. Update the bot
 
-```
+```bash
 bun run update
 ```
 

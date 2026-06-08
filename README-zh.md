@@ -18,25 +18,25 @@
 
 在 Windows 上，请在命令提示符中运行以下命令：
 
-```
+```bash
 setup.bat
 ```
 
 或者，如果已安装 Bun：
 
-```
+```bash
 bun i
 ```
 
 ### 2. 启动机器人
 
-```
+```bash
 bun run src/index.ts
 ```
 
 ### 3. 更新机器人
 
-```
+```bash
 bun run update
 ```
 

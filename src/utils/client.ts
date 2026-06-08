@@ -43,12 +43,6 @@ export class Client extends DiscordClient {
   public rest: REST = new REST({ version: '10' }).setToken(this.config.token ?? '');
 
   constructor(options?: Omit<ClientOptions, 'intents'>) {
-    if (typeof Bun !== 'object') {
-      FancyLogger.error([
-        'This bot currently only supports Bun.js as a runtime.',
-        'Other javascript runtimes are not supported. May cause issues.',
-      ]);
-    }
     super({
       intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent', 'DirectMessages'],
       ...options,

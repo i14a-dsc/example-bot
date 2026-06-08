@@ -18,25 +18,25 @@
 
 Windows の場合は、コマンドプロンプトで以下を実行してください。
 
-```
+```bash
 setup.bat
 ```
 
 もしくは、
 
-```
+```bash
 bun i
 ```
 
 ### 2. ボットの起動
 
-```
+```bash
 bun run src/index.ts
 ```
 
 ### 3. ボットのアップデート
 
-```
+```bash
 bun run update
 ```
 
