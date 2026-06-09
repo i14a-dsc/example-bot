@@ -12,7 +12,7 @@ export async function interactionCreate(interaction: Interaction) {
 
     if (interaction.isButton()) await buttonHandler(interaction);
 
-    if (interaction.isChatInputCommand()) await commandHandler(interaction);
+    if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) await commandHandler(interaction);
 
     if (interaction.isModalSubmit()) await modalHandler(interaction);
 

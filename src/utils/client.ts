@@ -76,6 +76,31 @@ export class Client extends DiscordClient {
       }),
     );
 
+    const contextFiles = await fg('src/events/contexts/**/*.ts');
+    await Promise.allSettled(
+      contextFiles.map(async file => {
+        try {
+          if (isExampleFile(file)) {
+            return;
+          }
+          const relativePath = file.replace('src/events/contexts/', '../events/contexts/');
+          const module = await import(relativePath);
+          const contextCommand = Object.values(module).find(
+            (item): item is Command =>
+              typeof item === 'object' &&
+              item !== null &&
+              'data' in item &&
+              typeof (item as { run?: unknown }).run === 'function',
+          );
+          if (contextCommand) {
+            this.commands.set(contextCommand.data.name, contextCommand);
+          }
+        } catch (e) {
+          FancyLogger.error(`Error loading context command: ${file}, ${(e as Error).message}`);
+        }
+      }),
+    );
+
     this.buttons = new Collection();
     const buttonFiles = await fg('src/events/buttons/**/*.ts');
     await Promise.allSettled(

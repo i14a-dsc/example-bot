@@ -1,4 +1,4 @@
-import { MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
+import { MessageFlags, type ChatInputCommandInteraction, type CommandInteraction } from 'discord.js';
 import { client } from '../../..';
 import { errorComponent } from '../../../utils/components';
 import { checkCommandPermission } from '../../../utils/utils';
@@ -7,7 +7,7 @@ const commandRateLimitMap = new Map<string, { count: number; resetTime: number }
 const COMMAND_RATE_LIMIT_MAX = 5;
 const COMMAND_RATE_LIMIT_WINDOW = 10000;
 
-export async function commandHandler(interaction: ChatInputCommandInteraction) {
+export async function commandHandler(interaction: CommandInteraction) {
   const command = client.commands.get(interaction.commandName);
   if (!command) {
     return client.config.development ? console.error('Command not found: ', interaction.commandName) : void 0;
