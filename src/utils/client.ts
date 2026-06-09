@@ -52,8 +52,6 @@ export class Client extends DiscordClient {
   }
 
   async init() {
-    FancyLogger.loading('Initializing Discord bot');
-
     await this.createDirectoryStructure();
 
     this.on('messageCreate', messageCreate);
@@ -165,11 +163,9 @@ export class Client extends DiscordClient {
     );
 
     if (this.commands.size > 0) {
-      FancyLogger.loading(`Uploading ${this.commands.size} slash commands...`, '📤 Commands');
       await this._uploadCommands();
     }
 
-    FancyLogger.loading('Logging in to Discord', '🔑 Client');
     await this.login(this.config.token);
     return this;
   }
