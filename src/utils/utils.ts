@@ -68,7 +68,7 @@ export async function deleteLockfile(): Promise<void> {
 }
 
 export function isExampleFile(fileName: string): boolean {
-  return config.ignoreExample || fileName === 'example';
+  return config.ignoreExample && fileName.includes('example');
 }
 
 /**
